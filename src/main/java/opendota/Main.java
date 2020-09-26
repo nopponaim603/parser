@@ -1,5 +1,6 @@
 package opendota;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -21,8 +22,12 @@ public class Main {
         @Override
         public void handle(HttpExchange t) throws IOException {
             t.sendResponseHeaders(200, 0);
+            System.out.println(t.getRequestURI().getPath().length());
+
             InputStream is = t.getRequestBody();
             OutputStream os = t.getResponseBody();
+
+
             try {
             	new Parse(is, os);
             }
@@ -30,7 +35,12 @@ public class Main {
             {
             	e.printStackTrace();
             }
+
+
+
+
             os.close();
+
         }
     }
 }
