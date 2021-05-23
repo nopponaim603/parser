@@ -2,9 +2,7 @@
 /shelf/
 /workspace.xml
 # Datasource local storage ignored files
-/../../../../../:\Developer\IdeaProjects\parser\.idea/dataSources/
+/../../../../../../:\Development\JetBrains\IdeaProjects\parser\.idea/dataSources/
 /dataSources.local.xml
-# Zeppelin ignored files
-/ZeppelinRemoteNotebooks/
 # Editor-based HTTP Client requests
 /httpRequests/
