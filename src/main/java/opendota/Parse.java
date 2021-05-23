@@ -192,6 +192,7 @@ public class Parse {
       parser = new JSONParser();
 
       is = input;
+      //System.out.print(is.toString());
       os = output;
       isPlayerStartingItemsWritten = new ArrayList<>(Arrays.asList(new Boolean[numPlayers]));
       Collections.fill(isPlayerStartingItemsWritten, Boolean.FALSE);
@@ -204,7 +205,7 @@ public class Parse {
         try {
 
             // Constructs a FileWriter given a file name, using the platform's default charset
-            file = new FileWriter("replay.json");
+            file = new FileWriter("JSON/replay.json");
 
             file.write(obj.toJSONString());
             System.out.println("Successfully Copied JSON Object to File...");

@@ -25,8 +25,9 @@ public class Main {
         @Override
         public void handle(HttpExchange t) throws IOException {
             t.sendResponseHeaders(200, 0);
-            System.out.println(t.getRequestURI().getPath().length());
-
+            System.out.println("Show input.");
+            System.out.println(t.getRequestHeaders().toString());
+            
             InputStream is = t.getRequestBody();
             OutputStream os = t.getResponseBody();
 
