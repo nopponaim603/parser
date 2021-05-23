@@ -2,7 +2,8 @@ package opendota;
 
 import com.google.gson.Gson;
 import com.google.protobuf.GeneratedMessage;
-import skadistats.clarity.decoder.Util;
+
+import skadistats.clarity.io.Util;
 import skadistats.clarity.model.Entity;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.StringTable;
@@ -41,6 +42,16 @@ import opendota.combatlogvisitors.TrackVisitor.TrackStatus;
 import opendota.processors.warding.OnWardExpired;
 import opendota.processors.warding.OnWardKilled;
 import opendota.processors.warding.OnWardPlaced;
+
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import java.io.FileWriter;
+import java.io.IOException;
+
 
 public class Parse {
 
@@ -167,12 +178,21 @@ public class Parse {
 
     boolean isDotaPlusProcessed = false;
 
+    private static FileWriter file;
+    private JSONArray  obj;
+    private JSONParser parser;
+
+
     public Parse(InputStream input, OutputStream output) throws IOException
     {
       greevilsGreedVisitor = new GreevilsGreedVisitor(name_to_slot);
       trackVisitor = new TrackVisitor();
-    	
+
+      obj = new JSONArray ();
+      parser = new JSONParser();
+
       is = input;
+      //System.out.print(is.toString());
       os = output;
       isPlayerStartingItemsWritten = new ArrayList<>(Arrays.asList(new Boolean[numPlayers]));
       Collections.fill(isPlayerStartingItemsWritten, Boolean.FALSE);
@@ -180,8 +200,32 @@ public class Parse {
       new SimpleRunner(new InputStreamSource(is)).runWith(this);
       long tMatch = System.currentTimeMillis() - tStart;
       System.err.format("total time taken: %s\n", (tMatch) / 1000.0);
+      System.out.println("Test End Prodess..");
+
+        try {
+
+            // Constructs a FileWriter given a file name, using the platform's default charset
+            file = new FileWriter("JSON/replay.json");
+
+            file.write(obj.toJSONString());
+            System.out.println("Successfully Copied JSON Object to File...");
+            System.out.println("\nJSON Object: " + obj.toJSONString());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        } finally {
+
+            try {
+                file.flush();
+                file.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
     }
-    
+
     public void output(Entry e) {
         try {
             if (gameStartTime == 0) {
@@ -189,9 +233,15 @@ public class Parse {
             } else {
                 e.time -= gameStartTime;
                 this.os.write((g.toJson(e) + "\n").getBytes());
+
+                obj.add((JSONObject) parser.parse(g.toJson(e)));
+                //JSONObject json = (JSONObject) parser.parse(g.toJson(e));
+
+                //supplierNames.add(g.toJson(e))
+                //System.out.println(g.toJson(e));
             }
         }
-        catch (IOException ex)
+        catch (IOException | ParseException ex)
         {
             System.err.println(ex);
         }
