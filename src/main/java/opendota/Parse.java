@@ -219,6 +219,7 @@ public class Parse {
             try {
                 file.flush();
                 file.close();
+                System.out.println("Successfully Copied JSON Object to File...");
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
